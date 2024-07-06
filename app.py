@@ -2,10 +2,8 @@ import pandas as pd
 from flask import Flask, render_template, request
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Flask uygulamasını başlatma
 app = Flask(__name__)
 
-# Veri setlerini indirme ve okuma
 def download_and_extract_data():
     import requests, zipfile, io
     url = 'https://files.grouplens.org/datasets/movielens/ml-latest-small.zip'
@@ -18,13 +16,10 @@ download_and_extract_data()
 ratings = pd.read_csv('ml-latest-small/ratings.csv')
 movies = pd.read_csv('ml-latest-small/movies.csv')
 
-# Film başına ortalama değerlendirme ve değerlendirme sayısı
 average_rating_per_movie = ratings.groupby('movieId')['rating'].mean()
 
-# Filmleri değerlendirme sayılarına göre sıralayalım
 movies['avg_rating'] = movies['movieId'].map(average_rating_per_movie)
 
-# Kullanıcı-Film matrisini oluşturma
 user_movie_matrix = ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
 user_similarity = cosine_similarity(user_movie_matrix)
 user_similarity_df = pd.DataFrame(user_similarity, index=user_movie_matrix.index, columns=user_movie_matrix.index)
@@ -45,7 +40,7 @@ def recommend_movies(user_id, num_recommendations=5):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     error_message = None
-    recommended_movies = pd.DataFrame()  # Boş bir DataFrame ile başlat
+    recommended_movies = pd.DataFrame() 
     user_id = None
     if request.method == 'POST':
         try:
