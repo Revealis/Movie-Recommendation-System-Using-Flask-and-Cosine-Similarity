@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Recommendation System</h1>
+        <form method="POST">
+            <label for="user_id">Enter User ID(1-610):</label>
+            <input type="number" id="user_id" name="user_id" required>
+            <button type="submit">Get Advice!</button>
+        </form>
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+        {% if user_id and not error_message %}
+            <h2>Recommended Movies for User {{ user_id }}:</h2>
+            <ul>
+                {% for movie in movies %}
+                    <li>
+                        {{ movie['title'] }}
+                        <span>({{ movie['avg_rating'] }} Average Point)</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
